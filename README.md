@@ -3,13 +3,13 @@
 <a href="https://multidraw.fr">MultiDraw</a>
 
 # **Todo List :**
-| Parties          | Liste de choses à faire      | % completed
+| Parties          | Liste de choses à faire      | % completé
 | ---------------- | ------- | ------------------ |
 | Site Web         | Le landing page              | :red_circle: 0
 |                  | A propos de nous             | :red_circle: 0          
 |                  | S'inscrire / Se connecter    | :red_circle: 0
 |                  | Dashboard                    | :red_circle: 0
-|                  | Profile                      | :red_circle: 0 
+|                  | Profil                       | :red_circle: 0 
 |                  | Création de la partie        | :red_circle: 0
 |                  | Attente des joueurs          | :red_circle: 0
 |                  | La partie (la ou on joue)    | :red_circle: 0 
