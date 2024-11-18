@@ -7,7 +7,7 @@
 | ---------------- | ------- | ------------------ |
 | Site Web         | Le landing page              | :orange_circle: 50
 |                  | A propos de nous             | :red_circle: 0          
-|                  | S'inscrire / Se connecter    | :red_circle: 0
+|                  | S'inscrire / Se connecter    | :green_circle: 100
 |                  | Dashboard                    | :red_circle: 0
 |                  | Profil                       | :red_circle: 0 
 |                  | Création de la partie        | :red_circle: 0
