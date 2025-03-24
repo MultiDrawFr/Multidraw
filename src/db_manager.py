@@ -1,7 +1,8 @@
 # ===== Imports =====
 
 from hashlib import sha256
-from secrets import token_hex
+from secrets import token_hex, token_urlsafe
+from time import time
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, session
@@ -41,15 +42,18 @@ def unregister_account(username: str, email: str) -> bool:
 
 def login_account(username: str, password: str) -> bool:
     if username and password:
+        print('etape1')
         toLoginAccount = db.query(Account).filter_by(username=username).first()
+        print('etape2')
         if toLoginAccount:
+            print('étape3')
             return sha256(
                 password.encode()).hexdigest() == toLoginAccount.password
         else:
+            print('false')
             return False
     else:
         return False
-
 
 def username_recovery(email: str):
     toLoginAccount = db.query(Account).filter_by(email=email).first()
@@ -71,7 +75,10 @@ def password_recovery(username: str, newPassword: str):
 
 
 def generate_token(username: str):
-    generatedToken = token_hex(16)
+    generatedToken = token_urlsafe(24)
+    accountTokenInfos = db.query(Tokens.token, Tokens.datetime).filter_by(username=username).first()
+    if accountTokenInfos[0] and accountTokenInfos[1] + 604800 > time():
+        pass
     newToken = Tokens(username=username, token=generatedToken)
     
 

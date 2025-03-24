@@ -64,7 +64,7 @@ async def get_verify_account(request: Request):
     
     if login_account(username, password):
         token = token_urlsafe(24)
-    return {'token': token, 'request': request}
+    return {'token': token}
 
 
 @multidrawAPI.post('/api/v1/accounts/register')

@@ -3,10 +3,15 @@
   --text-color: #f5f5f5;
   --nav-bg-color: #1f1f1f;
   --nav-text-color: #ffffff;
-  --nav-hover-color: #333333;
   --button-bg-color: #878188;
   --button-hover-color: #faf9fb;
   --border-color: #333333;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 ::selection {
@@ -15,7 +20,6 @@
 }
 
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -29,8 +33,6 @@ a {
 
 ul {
   list-style-type: none;
-  padding: 0;
-  margin: 0;
 }
 
 .logo {
@@ -47,7 +49,6 @@ ul {
   left: 5%;
   width: 80%;
   position: fixed; 
-  border-radius: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -60,14 +61,7 @@ ul {
 
 .main-nav ul {
   display: flex;
-  align-items: center;
   gap: 1rem;
-  margin: 0;
-  padding: 0;
-}
-
-.main-nav ul li {
-  margin: 0;
 }
 
 .main-nav ul li a, .BoutonConnection {
@@ -82,14 +76,11 @@ ul {
   transition: background-color 0.3s;
 }
 
-
 button {
-  display: inline-block;
   padding: 0.4rem 1rem;
   font-size: 1rem;
-  font-family: Arial, sans-serif;
   font-weight: bold;
-  color: var(--button-text-color);
+  color: var(--text-color);
   background-color: var(--button-bg-color);
   border: 2px solid var(--border-color);
   border-radius: 5px;
@@ -108,26 +99,23 @@ button:active {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.main-h3 {
+h1, h3 {
   text-align: center;
-  margin-top: 15%; 
-  font-size: 1.75rem;
-  font-family: "Cormorant Garamond";
-  font-weight: 1500;
-  font-style: normal;
   color: var(--text-color);
-  z-index: 1; 
-  position: relative;
 }
 
 .main-h1 {
-  text-align: center;
   margin-top: -50px;
   font-size: 10rem;
   font-family: "Anton", sans-serif;
-  color: var(--text-color);
-  z-index: 5; 
-  position: relative;
+  z-index: 5;
+}
+
+.main-h3 {
+  margin-top: 15%;
+  font-size: 1.75rem;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 500;
 }
 
 .background {
@@ -137,36 +125,32 @@ button:active {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: -1; 
-  opacity: 50%;
+  z-index: -1;
+  opacity: 0.5;
 }
 
-.loginpage {
-  top: 20%;
-  left: 35%;
-  text-align: center;
-  width: 30%;
-  padding: 2%;
+.page {
   background-color: var(--bg-color);
   opacity: 95%;
   border-radius: 10px;
   position: fixed;
+  padding: 20px;
+  text-align: center;
 }
 
-.signuppage {
-  top: 3%;
-  left: 30%;
-  text-align: center;
+.loginpage, .signuppage, .verifypage, .dashboard {
+  top: 20%;
+  left: 35%;
   width: 40%;
-  padding: 20px;
-  background-color: var(--bg-color);
-  opacity: 95%;
-  border-radius: 10px;
-  position: absolute;
+  height: 45%;
+}
+
+.loginpage {
+  width: 30%;
+  padding: 2%;
 }
 
 .loginpage h2 {
-  color: var(--text-color);
   font-size: 2rem;
   font-family: "Cormorant Garamond", serif;
   margin-bottom: 1rem;
@@ -183,10 +167,8 @@ button:active {
   flex-direction: column;
 }
 
-.form-group label {
+.form-group label, .form-group input {
   font-size: 1rem;
-  color: var(--text-color);
-  margin-bottom: 0.5rem;
 }
 
 .form-group input {
@@ -228,58 +210,20 @@ button:active {
   color: #3498db;
 }
 
-.verifypage {
-  top: 25%;
-  left: 30%;
-  width: 40%;
-  height: 45%;
-  background-color: var(--bg-color);
-  opacity: 95%;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  position: fixed;
-}
+.gamesquaremain {
+  display: grid;
+  width: 100px;
+  height: 100px;
+  grid-template-columns: repeat(2, 50px);
 
-.dashboard {
-  top: 25%;
-  left: 30%;
-  width: 40%;
-  height: 45%;
-  background-color: var(--bg-color);
-  opacity: 95%;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  position: fixed;
-}
-
-.container {
-  top: 20%;
-  left: 35%;
-  text-align: center;
-  width: 30%;
-  padding: 2%;
-  background-color: var(--bg-color);
-  opacity: 95%;
-  border-radius: 10px;
-  position: fixed;
 }
 
 .square {
-  width: 100px;
-  height: 100px;
-  background-color: red; /* Couleur visible */
-  border-radius: 7%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: bold;
-  color: white;
+  height: 50px;
+  width: 50px;
+  background-color: #555;
+  opacity: 100%;
 }
-
-
 
 
 @media (max-width: 768px) {
@@ -288,12 +232,9 @@ button:active {
     gap: 0.5rem;
   }
 
-  .loginpage {
-    top: 10%;
-    left: 10%;
+  .loginpage, .signuppage, .verifypage, .dashboard {
     width: 80%;
     height: auto;
-    padding: 15px;
   }
 
   .loginpage h2 {

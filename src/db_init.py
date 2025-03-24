@@ -27,6 +27,7 @@ class Tokens(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
     token = Column(String, unique=True, index=True)
+    datetime = Column(Integer, unique=False, index=True)
 
 
 # ===== DB Creation =====
