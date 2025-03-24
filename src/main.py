@@ -6,6 +6,9 @@ from fastapi.requests import Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from secrets import token_hex, token_urlsafe
+import sys
+
+sys.setrecursionlimit(100)
 
 # ===== API Inits =====
 
@@ -48,11 +51,17 @@ async def get_test(request: Request):
     return templates.TemplateResponse("test.html", {'request': request})
 
 
+@multidrawAPI.get('/game')
+async def get_test(request: Request):
+    return templates.TemplateResponse("game.html", {'request': request})
+
+
 @multidrawAPI.get('/api/v1/accounts/login/verify')
 async def get_verify_account(request: Request):
     username = request.query_params.get('username')
     password = request.query_params.get('password')
     token = False
+    
     if login_account(username, password):
         token = token_urlsafe(24)
     return {'token': token, 'request': request}

@@ -39,7 +39,7 @@ def unregister_account(username: str, email: str) -> bool:
         return False
 
 
-def login_account(username: str | None, password: str | None) -> bool:
+def login_account(username: str, password: str) -> bool:
     if username and password:
         toLoginAccount = db.query(Account).filter_by(username=username).first()
         if toLoginAccount:
