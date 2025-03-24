@@ -1,0 +1,24 @@
+<head>
+  <title>Skibidi</title>
+</head>
+<body>
+  <h1>Skibidi</h1>
+  <button onclick='getData()' >Click Me !</button>
+  <script>
+    async function getData() {
+      const url = "/api/v1/accounts/login/verify?username=test&password=test";
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+        }
+
+        const json = await response.json();
+        console.log(json);
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+
+  </script>
+</body>
