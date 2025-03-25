@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Welcome to MultiDraw!">
+    <meta name="keywords" content="multidraw">
+    <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre">
+    <title>MultiDraw - Connexion</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <img src="/static/webcontent/background.jpg" alt="BackGround" class="background">
+    <section class="loginpage">
+        <h2>Se connecter</h2>
+        <form id="login-form" class="login-form">
+            <div class="form-group">
+                <label for="username">Nom d'utilisateur</label>
+                <input type="text" id="username" name="username" required placeholder="Entrez votre nom d'utilisateur">
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" required placeholder="Entrez votre mot de passe">
+            </div>
+            <button type="submit" class="login-button">Connexion</button>
+        </form>
+        <p class="signup-link">
+            Pas encore de compte ? <a href="/register">Créer un compte</a>
+        </p>
+    </section>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", async function (event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+            
+            const form = event.target;
+            const payload = {
+                username: form.username.value,
+                password: form.password.value,
+            };
+
+            try {
+                const response = await fetch("/api/v1/accounts/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert(result.message);
+                    window.location.href = "/dashboard";
+                } else {
+                    const error = await response.json();
+                    alert(`Erreur : ${error.detail}`);
+                }
+            } catch (err) {
+                console.error("Erreur réseau :", err);
+                alert("Une erreur réseau s'est produite.");
+            }
+        });
+    </script>
+</body>
+</html>

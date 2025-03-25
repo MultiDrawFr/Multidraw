@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Créer une nouvelle partie MultiDraw" />
+    <meta name="keywords" content="multidraw, game" />
+    <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre" />
+    <title>MultiDraw - Créer une partie</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+
+  <body>
+    <section class="create-game">
+      <h2>Créer une nouvelle partie</h2>
+      <p>Utilisateur connecté : <span id="username-display">Non connecté</span></p>
+      <form id="create-game-form">
+        <div class="form-group">
+          <label for="name">Nom de la partie</label>
+          <input type="text" id="name" name="name" required placeholder="Nom de la partie" />
+        </div>
+      
+        <button type="submit" class="create-game-button">Créer la partie</button>
+      </form>      
+
+      <div id="game-link-container" style="display: none;">
+        <p>Votre lien pour rejoindre la partie : <span id="game-link"></span></p>
+        <button id="copy-link-button">Copier le lien</button>
+      </div>
+    </section>
+
+    <script src="/static/create-game.js"></script>
+  </body>
+</html>

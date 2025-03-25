@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Dashboard MultiDraw" />
+    <meta name="keywords" content="dashboard, multidraw" />
+    <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre" />
+    <title>MultiDraw - Dashboard</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="/static/dashboard.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <img src="/static/webcontent/background.jpg" alt="BackGround" class="background">
+    <!-- Navigation -->
+    <nav class="main-nav">
+      <div class="logo">
+        <a href="/">
+          <img src="/static/logo.png" alt="Logo MultiDraw" class="logo-img" />
+        </a>
+      </div>
+      <ul>
+        <li><a href="/">Accueil</a></li>
+        <li><a href="/profile">Mon Profil</a></li>
+        <li><a href="/games">Mes Jeux</a></li>
+        <li><a href="/logout">Déconnexion</a></li>
+      </ul>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard">
+      <h2 class="main-title">Tableau de Bord</h2>
+      <div class="dashboard-content">
+        <!-- User Info Card -->
+        <div class="card user-info">
+          <h3>Bienvenue, <span id="username">...</span>!</h3>
+          <p>Email : <span id="email">...</span></p>
+          <p>Parties jouées : <span id="games-played">...</span></p>
+          <p>Score total : <span id="total-score">...</span></p>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card quick-actions">
+          <h3>Actions rapides</h3>
+          <ul>
+            <li><a href="/new-game" class="dashboard-button">Créer une nouvelle partie</a></li>
+            <li><a href="/games" class="dashboard-button">Rejoindre une partie</a></li>
+            <li><a href="/settings" class="dashboard-button">Paramètres</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2024 MultiDraw. Tous droits réservés.</p>
+    </footer>
+  </body>
+</html>
