@@ -22,8 +22,6 @@ class Account(Base):
     games_played = Column(Integer, default=0)
     total_score = Column(Integer, default=0)
 
-
-
 class Tokens(Base):
     __tablename__ = "tokens"
     id = Column(Integer, primary_key=True, index=True)
@@ -31,19 +29,17 @@ class Tokens(Base):
     token = Column(String, unique=True, index=True)
     datetime = Column(Integer, unique=False, index=True)
 
-
-# ===== DB Creation =====
-
-Base.metadata.create_all(bind=engine)
-
-# ===== NEW GAME =====
-
 class Game(Base):
     __tablename__ = "games"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
-    creator = Column(String, index=True)  # Créateur de la partie
-    players = Column(String)  # Liste des joueurs (max 4)
-    link = Column(String, unique=True)  # Lien pour rejoindre la partie
-    is_full = Column(Boolean, default=False)  # Si la partie est plein
+    creator = Column(String, index=True)
+    players = Column(String)
+    link = Column(String, unique=True)
+    is_full = Column(Boolean, default=False)
     
+
+
+# ===== DB Creation =====
+
+Base.metadata.create_all(bind=engine)

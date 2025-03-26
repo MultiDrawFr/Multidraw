@@ -43,15 +43,11 @@ def unregister_account(username: str, email: str) -> bool:
 
 def login_account(username: str, password: str) -> bool:
     if username and password:
-        print('etape1')
         toLoginAccount = db.query(Account).filter_by(username=username).first()
-        print('etape2')
         if toLoginAccount:
-            print('étape3')
             return sha256(
                 password.encode()).hexdigest() == toLoginAccount.password
         else:
-            print('false')
             return False
     else:
         return False
@@ -74,13 +70,24 @@ def password_recovery(username: str, newPassword: str):
     else:
         return False
 
+def get_user_from_token(token: str):
+    tokenInfos = db.query(Tokens.username, Tokens.datetime).filter_by(token = token).first()
+    if not tokenInfos or tokenInfos[1] + 604800 <= time():
+        return False
+    return tokenInfos[0]
 
 def generate_token(username: str):
     generatedToken = token_urlsafe(24)
     accountTokenInfos = db.query(Tokens.token, Tokens.datetime).filter_by(username=username).first()
-    if accountTokenInfos[0] and accountTokenInfos[1] + 604800 > time():
-        pass
-    newToken = Tokens(username=username, token=generatedToken)
+    if not accountTokenInfos or accountTokenInfos[1] + 604800 <= time():
+        generatedToken, tokenDatetime = token_urlsafe(24), round(time())
+        if not accountTokenInfos:
+            db.add(Tokens(username=username, token=generatedToken, datetime=round(time())))
+        else:
+            db.query(Tokens).filter_by(username=username).update({"token": generatedToken, "datetime": tokenDatetime})
+        db.commit()
+        return generatedToken
+    return accountTokenInfos[0]
 
 def hash_password(password: str) -> str:
     return hashpw(password.encode(), gensalt()).decode()
@@ -94,6 +101,4 @@ def check_password(password: str, hashed: str) -> bool:
 # ===== Execution =====
 
 if __name__ == '__main__':
-    print(register_account('test', 'test', 'test'))
-    print(login_account('JudicaelAdmin', 'kevinjletape'))
-    print(login_account('JudicaelAdmin', 'yanisjletape'))
+    print(get_user_from_token('zlt4VLnAEh7ow8M7lv83PoZo3wmS_HJB'))

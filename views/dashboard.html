@@ -13,13 +13,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
-  <body>
+  <body style="overflow: hidden;">
     <img src="/static/webcontent/background.jpg" alt="BackGround" class="background">
     <!-- Navigation -->
     <nav class="main-nav">
       <div class="logo">
         <a href="/">
-          <img src="/static/logo.png" alt="Logo MultiDraw" class="logo-img" />
+          <img src="/static/logo.png" alt="Logo MultiDraw" class="logo-img" style="height: 30%; width: 30%;" />
         </a>
       </div>
       <ul>
@@ -34,15 +34,13 @@
     <section class="dashboard">
       <h2 class="main-title">Tableau de Bord</h2>
       <div class="dashboard-content">
-        <!-- User Info Card -->
-        <div class="card user-info">
+        <!-- User Info (Nom et Email) - Gauche -->
+        <div class="card user-info-left">
           <h3>Bienvenue, <span id="username">...</span>!</h3>
           <p>Email : <span id="email">...</span></p>
-          <p>Parties jouées : <span id="games-played">...</span></p>
-          <p>Score total : <span id="total-score">...</span></p>
         </div>
 
-        <!-- Quick Actions -->
+        <!-- Quick Actions - Centre -->
         <div class="card quick-actions">
           <h3>Actions rapides</h3>
           <ul>
@@ -51,12 +49,19 @@
             <li><a href="/settings" class="dashboard-button">Paramètres</a></li>
           </ul>
         </div>
+
+        <!-- Stats (Parties jouées et Score) - Droite -->
+        <div class="card user-stats-right">
+          <h3>Statistiques</h3>
+          <p>Parties jouées : <span id="games-played">...</span></p>
+          <p>Score total : <span id="total-score">...</span></p>
+        </div>
       </div>
     </section>
 
     <!-- Footer -->
     <footer>
-      <p>&copy; 2024 MultiDraw. Tous droits réservés.</p>
+      <p>© 2024 MultiDraw. Tous droits réservés.</p>
     </footer>
   </body>
 </html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Rejoindre une partie MultiDraw" />
+    <meta name="keywords" content="multidraw, game, join" />
+    <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre" />
+    <title>MultiDraw - Rejoindre une partie</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+
+  <body>
+    <img src="/static/webcontent/background.jpg" alt="BackGround" class="background">
+    <section class="join-game">
+      <h2>Rejoindre une partie</h2>
+      <p>Utilisateur connecté : <span id="username-display">Non connecté</span></p>
+      <div id="join-message" style="display: none;">
+        <p id="join-status"></p>
+        <button id="join-button" style="display: none;">Rejoindre la partie</button>
+        <a href="/login" id="login-link" style="display: none;">Se connecter</a>
+      </div>
+    </section>
+
+    <script src="/static/join-game.js"></script>
+  </body>
+</html>
