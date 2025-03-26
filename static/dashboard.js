@@ -35,3 +35,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         window.location.href = "/login";  // Redirige en cas d'erreur critique
     }
 });
+
+document.getElementById('logout-button').addEventListener("click", function() {
+    document.cookie = "token=; expires=Thu, 01, Jan 1970 00:00:00 GMT; path=/";
+    window.location.href = '/'
+})
