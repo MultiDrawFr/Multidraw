@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobby - MultiDraw</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        #lobby-container {
+            margin: 20px auto;
+            max-width: 600px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #game-link {
+            word-break: break-all;
+            margin: 10px 0;
+        }
+        #copy-link-button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #creator-name {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        #players-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #players-list li {
+            margin: 5px 0;
+        }
+        #leave-lobby-button {
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        #start-game-button {
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            display: none; /* Caché par défaut, affiché uniquement pour le créateur */
+        }
+    </style>
+</head>
+<body>
+    <div id="lobby-container">
+        <h1>Lobby - MultiDraw</h1>
+        <p>Utilisateur connecté : <span id="username-display"></span></p>
+        <p>Lien de la partie : <span id="game-link"></span></p>
+        <button id="copy-link-button">Copier le lien</button>
+        <p>Créateur : <span id="creator-name"></span></p>
+        <h2>Joueurs dans la partie :</h2>
+        <ul id="players-list"></ul>
+        <button id="start-game-button">Commencer le jeu</button>
+        <button id="leave-lobby-button">Quitter le salon</button>
+    </div>
+    <script src="/static/lobby.js"></script>
+</body>
+</html>

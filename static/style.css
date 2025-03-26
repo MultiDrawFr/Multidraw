@@ -22,7 +22,6 @@ body {
   transition: background-color 0.3s, color 0.3s;
   position: relative;
   min-height: 100vh;
-  overflow: hidden;
 }
 
 a {
@@ -415,6 +414,198 @@ footer {
   text-align: center;
   font-size: 0.9rem;
   color: var(--text-color);
+}
+
+.lobby {
+  position: relative;
+  top: 15%;
+  width: 50%;
+  margin: 0 auto;
+  padding: 2%;
+  background-color: var(--nav-bg-color);
+  opacity: 95%;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.lobby h2 {
+  font-family: "Anton", sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 2%;
+  color: var(--text-color);
+}
+
+.lobby p {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  margin-bottom: 2%;
+}
+
+#lobby-content {
+  margin-top: 2%;
+}
+
+#lobby-content h3 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin-bottom: 1%;
+}
+
+#lobby-content h4 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin-bottom: 1%;
+}
+
+#leave-lobby-button {
+  padding: 1rem;
+  background-color: #e63946; /* Rouge pour indiquer une action de quitter */
+  color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  margin-top: 2%;
+  transition: background-color 0.3s ease;
+}
+
+#leave-lobby-button:hover {
+  background-color: #d00000;
+}
+
+#players-list {
+  list-style: none;
+  padding: 0;
+}
+
+#players-list li {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  margin-bottom: 0.5%;
+}
+
+.join-game {
+  position: relative;
+  top: 15%;
+  width: 50%;
+  margin: 0 auto;
+  padding: 2%;
+  background-color: var(--nav-bg-color);
+  opacity: 95%;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.join-game h2 {
+  font-family: "Anton", sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 2%;
+  color: var(--text-color);
+}
+
+.join-game p {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  margin-bottom: 2%;
+}
+
+#join-button {
+  display: none; /* Cacher le bouton par défaut */
+  padding: 1rem;
+  background-color: var(--button-bg-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+}
+
+#join-button:hover {
+  background-color: var(--button-hover-color);
+  color: var(--bg-color);
+}
+
+#login-link {
+  display: block;
+  margin-top: 1rem;
+  color: #3498db;
+  font-size: 1.1rem;
+}
+
+.create-game {
+  position: relative;
+  top: 15%;
+  width: 50%;
+  margin: 0 auto;
+  padding: 2%;
+  background-color: var(--nav-bg-color);
+  opacity: 95%;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.create-game h2 {
+  font-family: "Anton", sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 2%;
+  color: var(--text-color);
+}
+
+.create-game p {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  margin-bottom: 2%;
+}
+
+#go-to-lobby-button {
+  display: none;
+  padding: 1rem;
+  background-color: var(--button-bg-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+#go-to-lobby-button:hover {
+  background-color: var(--button-hover-color);
+  color: var(--bg-color);
+}
+
+/* Lobby Section - Ajout du style pour le lien */
+#game-link-container {
+  margin-bottom: 2%;
+}
+
+#game-link-container p {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  margin-bottom: 1%;
+}
+
+#copy-link-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--button-bg-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+#copy-link-button:hover {
+  background-color: var(--button-hover-color);
+  color: var(--bg-color);
 }
 
 /* Responsive Design */

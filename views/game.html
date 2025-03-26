@@ -3,46 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Dashboard MultiDraw">
-    <meta name="keywords" content="dashboard, multidraw">
-    <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre">
-    <title>MultiDraw - Dashboard</title>
-    
-    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/static/style.css">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Jeu - MultiDraw (Gartic Phone)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        #game-container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
+        }
+        #reference-container {
+            flex: 1;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        #reference-phrase {
+            font-size: 24px;
+            text-align: center;
+        }
+        #reference-drawing {
+            max-width: 100%;
+            max-height: 80vh;
+            border: 2px solid #333;
+            border-radius: 10px;
+        }
+        #drawing-area {
+            flex: 1;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        #canvas {
+            border: 2px solid #333;
+            border-radius: 10px;
+            background-color: #ffffff;
+        }
+        #sidebar {
+            width: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 10px;
+            background-color: #ddd;
+            border-radius: 10px;
+        }
+        .color-button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #eraser-button {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+        #timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        #submit-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #submit-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #write-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            display: none;
+            text-align: center;
+        }
+        #phrase-input {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        #result-container {
+            display: none;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .sequence {
+            border: 2px solid #333;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: white;
+            width: 80%;
+            text-align: center;
+        }
+        .sequence img {
+            max-width: 300px;
+            max-height: 300px;
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
-
-    <!-- Image de fond -->
-    <img src="/static/webcontent/background.jpg" alt="BackGround" class="background">
-
-    <!-- Navigation -->
-    <nav class="main-nav">
-        <div class="logo">
-            <a href="/">
-                <img src="/static/logo.png" alt="Logo MultiDraw" style="height: 30%; width: 30%">
-            </a>
+    <div id="game-container">
+        <!-- Zone pour afficher la phrase ou le dessin à deviner/dessiner -->
+        <div id="reference-container">
+            <div id="reference-phrase"></div>
+            <img id="reference-drawing" src="" alt="Dessin à deviner">
         </div>
-        <ul>
-            <li><a href="/">Accueil</a></li>
-            <li><a href="/profile">Mon Profil</a></li>
-            <li><a href="/games">Mes Jeux</a></li>
-            <li><a href="/logout">Déconnexion</a></li>
-        </ul>
-    </nav>
 
-    <!-- Carrés -->
-    <section class="gamesquaremain">
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-    </section>
+        <!-- Zone de dessin -->
+        <div id="drawing-area">
+            <canvas id="canvas" width="400" height="400"></canvas>
+            <div id="sidebar">
+                <button class="color-button" style="background-color: #ff0000;" data-color="#ff0000"></button>
+                <button class="color-button" style="background-color: #00ff00;" data-color="#00ff00"></button>
+                <button class="color-button" style="background-color: #0000ff;" data-color="#0000ff"></button>
+                <button class="color-button" style="background-color: #ffff00;" data-color="#ffff00"></button>
+                <button class="color-button" style="background-color: #ff00ff;" data-color="#ff00ff"></button>
+                <button class="color-button" style="background-color: #00ffff;" data-color="#00ffff"></button>
+                <button class="color-button" style="background-color: #ffa500;" data-color="#ffa500"></button>
+                <button class="color-button" style="background-color: #800080;" data-color="#800080"></button>
+                <button class="color-button" style="background-color: #000000;" data-color="#000000"></button>
+                <button id="eraser-button">Effacer</button>
+            </div>
+            <div id="timer"></div>
+            <button id="submit-button">J'ai fini</button>
+        </div>
 
+        <!-- Zone pour écrire une phrase ou une devinette -->
+        <div id="write-area">
+            <h2 id="write-title">Écrivez une phrase</h2>
+            <input type="text" id="phrase-input" placeholder="Entrez votre phrase ou devinette">
+            <button id="submit-phrase-button">Valider</button>
+        </div>
+
+        <!-- Résultats -->
+        <div id="result-container"></div>
+    </div>
+    <script src="/static/game.js"></script>
 </body>
 </html>

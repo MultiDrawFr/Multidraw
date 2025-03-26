@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Dashboard MultiDraw" />
+    <meta name="keywords" content="dashboard, multidraw" />
+    <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre" />
+    <title>MultiDraw - Dashboard</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+  </head>
+<!-- OUI JE SAIS J'AI RIEN FOUTU LAISSEZ MOI TRQL -->
+  <body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+      <div class="logo">
+        <a href="/">
+          <img src="/static/logo.png" alt="Logo MultiDraw" style="height: 30%; width: 30%" />
+        </a>
+      </div>
+      <ul>
+        <li><a href="/">Accueil</a></li>
+        <li><a href="/profile">Mon Profil</a></li>
+        <li><a href="/games">Mes Jeux</a></li>
+        <li><a href="/logout">Déconnexion</a></li>
+      </ul>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard">
+      <img src="/static/webcontent/background.jpg" alt="BackGround" class="background" />
+      <h2 class="main-h3">Tableau de Bord</h2>
+      <div class="dashboard-content">
+        <!-- User Info Card -->
+        <div class="card">
+          <h3>Bienvenue, [Nom de l'utilisateur]!</h3>
+          <p>Email : [email@example.com]</p>
+          <p>Parties jouées : 25</p>
+          <p>Score total : 1800</p>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+          <h3>Actions rapides</h3>
+          <ul>
+            <li><a href="/new-game" class="dashboard-button">Créer une nouvelle partie</a></li>
+            <li><a href="/games" class="dashboard-button">Rejoindre une partie</a></li>
+            <li><a href="/settings" class="dashboard-button">Paramètres</a></li>
+          </ul>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="card">
+          <h3>Activités récentes</h3>
+          <ul>
+            <li>Partie gagnée contre "User123" le 20/12/2024</li>
+            <li>Nouvelle réalisation débloquée : "Artiste en herbe"</li>
+            <li>Invité un ami : "NewUser456"</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2024 MultiDraw. Tous droits réservés.</p>
+    </footer>
+  </body>
+</html>

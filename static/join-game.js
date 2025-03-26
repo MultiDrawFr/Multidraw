@@ -2,6 +2,9 @@
 const gameLink = window.location.pathname.split('/join/')[1];
 
 window.addEventListener("load", async function() {
+    const joinButton = document.getElementById("join-button");
+    joinButton.style.display = "none"; // Cacher le bouton initialement
+
     try {
         // Vérifier si l'utilisateur est connecté
         const userResponse = await fetch("/api/user", {
@@ -46,15 +49,14 @@ window.addEventListener("load", async function() {
             return;
         }
 
-        // Si la requête est réussie, l'utilisateur peut rejoindre
-        document.getElementById("join-status").textContent = "Vous pouvez rejoindre la partie !";
-        document.getElementById("join-button").style.display = "block";
+        // Si la requête est réussie, afficher le bouton pour rejoindre
+        document.getElementById("join-status").textContent = "Vous pouvez rejoindre cette partie !";
+        joinButton.style.display = "block";
 
         // Gestion du bouton "Rejoindre la partie"
-        document.getElementById("join-button").addEventListener("click", async function() {
-            // Rediriger vers une page de jeu ou afficher un message de confirmation
-            alert("Vous avez rejoint la partie !");
-            // À implémenter : redirection vers la page de jeu
+        joinButton.addEventListener("click", function() {
+            // Rediriger directement vers la page du lobby
+            window.location.href = `/lobby/${gameLink}`;
         });
 
     } catch (error) {

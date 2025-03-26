@@ -10,8 +10,8 @@ function getCookie(name) {
     }
     return null;
 }
-window.addEventListener("load", async function() {
 
+window.addEventListener("load", async function() {
     try {
         const response = await fetch("/api/user", { 
             method: "GET",
@@ -77,7 +77,10 @@ document.getElementById("create-game-form").addEventListener("submit", async fun
         document.getElementById("game-link").textContent = gameLink;
         document.getElementById("game-link-container").style.display = "block";
 
-        // Gestion du bouton de copie
+        // Afficher le bouton "Aller au lobby" pour le créateur
+        document.getElementById("go-to-lobby-button").style.display = "block";
+
+        // Gestion du bouton "Copier le lien"
         document.getElementById("copy-link-button").addEventListener("click", function() {
             navigator.clipboard.writeText(gameLink).then(() => {
                 alert("Lien copié dans le presse-papier !");
@@ -85,6 +88,12 @@ document.getElementById("create-game-form").addEventListener("submit", async fun
                 console.log("Erreur lors de la copie:", err);
             });
         });
+
+        // Gestion du bouton "Aller au lobby"
+        document.getElementById("go-to-lobby-button").addEventListener("click", function() {
+            window.location.href = `/lobby/${data.game_link}`;
+        });
+
     } catch (error) {
         alert("Une erreur inattendue est survenue");
         console.log("Erreur lors de la requête:", error);
