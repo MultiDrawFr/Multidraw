@@ -52,8 +52,15 @@ window.addEventListener("load", async function() {
         updatePlayersList(gameData.players);
 
         // Afficher le bouton "Commencer le jeu" uniquement pour le créateur
+        const startGameButton = document.getElementById("start-game-button");
         if (username === gameData.creator) {
-            document.getElementById("start-game-button").style.display = "inline-block";
+            startGameButton.style.display = "inline-block";
+            // Activer/désactiver le bouton en fonction du nombre de joueurs
+            if (gameData.players.length >= 2) {
+                startGameButton.disabled = false;
+            } else {
+                startGameButton.disabled = true;
+            }
         }
 
         // Établir une connexion WebSocket pour les mises à jour en temps réel
@@ -76,13 +83,29 @@ window.addEventListener("load", async function() {
                 return;
             }
             if (data.action === "start_game") {
-                // Rediriger tous les joueurs vers la page du jeu
-                window.location.href = `/game/${gameLink}`;
+                // Rediriger tous les joueurs vers la page du jeu avec le nom d'utilisateur
+                window.location.href = `/game/${gameLink}?username=${encodeURIComponent(username)}`;
+                return;
+            }
+            if (data.action === "update_phase") {
+                console.log("Phase mise à jour:", data.phase);
                 return;
             }
             // Mettre à jour le créateur et la liste des joueurs
-            document.getElementById("creator-name").textContent = data.creator;
-            updatePlayersList(data.players);
+            if (data.creator && data.players) {
+                console.log("Mise à jour des joueurs pour", username, ":", data.players);
+                document.getElementById("creator-name").textContent = data.creator;
+                updatePlayersList(data.players);
+
+                // Activer/désactiver le bouton "Commencer le jeu" en fonction du nombre de joueurs
+                if (username === data.creator) {
+                    if (data.players.length >= 2) {
+                        startGameButton.disabled = false;
+                    } else {
+                        startGameButton.disabled = true;
+                    }
+                }
+            }
         };
 
         ws.onclose = function() {
@@ -96,6 +119,13 @@ window.addEventListener("load", async function() {
         // Gestion du bouton "Commencer le jeu"
         document.getElementById("start-game-button").addEventListener("click", async function() {
             try {
+                // Vérifier le nombre de joueurs avant d'envoyer le message
+                const playersList = document.getElementById("players-list").children;
+                if (playersList.length < 2) {
+                    alert("Il faut au moins 2 joueurs pour démarrer le jeu !");
+                    return;
+                }
+
                 // Envoyer un message WebSocket pour démarrer le jeu
                 ws.send(JSON.stringify({
                     action: "start_game"
@@ -154,6 +184,7 @@ window.addEventListener("load", async function() {
 // Fonction pour mettre à jour la liste des joueurs
 function updatePlayersList(players) {
     const playersList = document.getElementById("players-list");
+    console.log("Mise à jour de la liste des joueurs dans l'interface:", players);
     playersList.innerHTML = ""; // Vider la liste
     if (players && players.length > 0) {
         players.forEach(player => {

@@ -142,25 +142,6 @@ button:active {
   opacity: 50%;
 }
 
-.drawingdog {
-  position: absolute;
-  border-radius: 10px;
-  top: 47%;
-  left: 10%;
-  width: 300px;
-  height: 350px;
-  transform: rotate(-20deg);
-}
-
-.drawingcat {
-  position: absolute;
-  border-radius: 10px;
-  top: 30%;
-  right: 15%;
-  width: 300px;
-  height: 400px;
-}
-
 .loginpage {
   top: 20%;
   left: 35%;

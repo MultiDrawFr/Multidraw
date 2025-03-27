@@ -1,47 +1,167 @@
-      <!DOCTYPE html>
-      <html lang="fr">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <meta name="description" content="Welcome to MultiDraw!" />
-          <meta name="keywords" content="multidraw" />
-          <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre" />
-          <title>MultiDraw - Acceuil</title>
-          <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
-          <link rel="stylesheet" href="/static/style.css" />
-          <link rel="preconnect" href="https://fonts.googleapis.com">
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-          <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
-          <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-        </head>
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Welcome to MultiDraw!" />
+    <meta name="keywords" content="multidraw" />
+    <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre" />
+    <title>MultiDraw - Accueil</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        <body>
-          <nav class="main-nav">
-            <div class="logo">
-              <a href="/">
-                <img src="/static/logo.png" alt="Logo MultiDraw" style="height: 30%; width: 30%" />
-              </a>
-            </div>
-            <ul>
-              <li><a href="/">Accueil</a></li>
-              <li><a href="team.html">L'équipe</a></li>
-              <li><a href="https://github.com/Multidrawfr/MultiDraw">Github</a></li>
-              <li><a href="login">Se Connecter</a></li>
-            </ul>
-          </nav>
+      body {
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        color: white;
+        overflow: hidden;
+        position: relative; /* to allow positioning elements above the blurred background */
+      }
 
-          <section>
-            <img src="/static/webcontent/background.jpg" alt="BackGround" class="background" />
-            <section class="acceuil">
-              <h3 class="main-h3">Bienvenue Sur</h3>
-              <h1 class="main-h1">MultiDraw</h1>
+      .background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: blur(10px) brightness(0.4);
+        z-index: -1; /* makes sure it stays behind all other elements */
+      }
 
-            </section>
-          <br>
-          <section>
-            <h2>Le meilleur jeu de dessin multijoueur !</h2>
-            <img src="/static/webcontent/gameplay.png" alt="Emoji" class="gameplay" /> <!-- A ajouter lorsqu'on aura une demo du jeu -->
-            
-          </section>
-        </body>
-      </html>
+      nav.main-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      nav .logo img {
+        height: 40px;
+        width: auto;
+      }
+
+      nav ul {
+        display: flex;
+        list-style-type: none;
+      }
+
+      nav ul li {
+        margin: 0 15px;
+      }
+
+      nav ul li a {
+        color: black;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+
+      nav ul li a:hover {
+        color: #ff9f00;
+      }
+
+
+
+      .main-h3 {
+        text-align: center;
+        margin-top: 15%;
+        font-size: 4vw; /* Responsive size */
+        font-family: "Cormorant Garamond";
+        font-weight: 500;
+        color: white;
+        z-index: 1;
+        position: relative;
+      }
+
+      .main-h1 {
+        text-align: center;
+        margin-top: -50px;
+        font-size: 12vw; /* Responsive size */
+        font-family: 'Anton', sans-serif;
+        color: white;
+        z-index: 5;
+        position: relative;
+      }
+
+      section h2 {
+        font-size: 30px;
+        font-weight: 500;
+        color: white;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .gameplay {
+        width: 100%;
+        max-width: 600px;
+        margin: 30px auto;
+        display: block;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      footer {
+        position: absolute;
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
+        color: white;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Background Image (blurred) -->
+    <img src="/static/webcontent/background.jpg" alt="Background" class="background" />
+
+    <nav class="main-nav">
+      <div class="logo">
+        <a href="/">
+          <img src="/static/logo.png" alt="Logo MultiDraw" />
+        </a>
+      </div>
+      <ul>
+        <li><a href="/">Accueil</a></li>
+        <li><a href="team.html">L'équipe</a></li>
+        <li><a href="https://github.com/Multidrawfr/MultiDraw">Github</a></li>
+        <li><a href="/login">Se Connecter</a></li>
+      </ul>
+    </nav>
+
+    <section class="acceuil">
+      <h3 class="main-h3">Bienvenue Sur</h3>
+      <h1 class="main-h1">MultiDraw</h1>
+    </section>
+
+    <section>
+      <h2>Le meilleur jeu de dessin multijoueur !</h2>
+      <img src="/static/webcontent/gameplay.png" alt="Gameplay" class="gameplay" />
+    </section>
+
+    <footer>
+      <p>© 2024 MultiDraw. Tous droits réservés.</p>
+    </footer>
+  </body>
+</html>

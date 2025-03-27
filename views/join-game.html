@@ -1,28 +1,123 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Rejoindre une partie MultiDraw" />
-    <meta name="keywords" content="multidraw, game, join" />
-    <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rejoindre une partie MultiDraw">
+    <meta name="keywords" content="multidraw, game, join">
+    <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre">
     <title>MultiDraw - Rejoindre une partie</title>
-    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="/static/style.css" />
-  </head>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <body>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: url('/static/webcontent/background.jpg') no-repeat center center/cover;
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(8px) brightness(0.6);
+            z-index: -1;
+        }
+
+        .join-game {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: white;
+            width: 90%;
+            max-width: 400px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        #join-message {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .join-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: 0.3s;
+            outline: none;
+            background: #1e90ff;
+            color: white;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.5);
+        }
+
+        .join-button:hover {
+            background: #0c7cd5;
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.7);
+        }
+
+        #login-link {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 14px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        #login-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
     <img src="/static/webcontent/background.jpg" alt="BackGround" class="background">
     <section class="join-game">
-      <h2>Rejoindre une partie</h2>
-      <p>Utilisateur connecté : <span id="username-display">Non connecté</span></p>
-      <div id="join-message" style="display: none;">
-        <p id="join-status"></p>
-        <button id="join-button" class="join-button">Rejoindre la partie</button>
-        <a href="/login" id="login-link" style="display: none;">Se connecter</a>
-      </div>
+        <h2>🎨 Rejoindre une partie</h2>
+        <p>Utilisateur connecté : <span id="username-display">Non connecté</span></p>
+        <div id="join-message">
+            <p id="join-status">En attente...</p>
+            <button id="join-button" class="join-button">🚀 Rejoindre la partie</button>
+            <a href="/login" id="login-link" style="display: none;">🔑 Se connecter</a>
+        </div>
     </section>
 
     <script src="/static/join-game.js"></script>
-  </body>
+</body>
 </html>

@@ -3,179 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeu - MultiDraw (Gartic Phone)</title>
+    <title>Jeu - MultiDraw</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            text-align: center;
             background-color: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
         }
         #game-container {
-            display: flex;
-            flex: 1;
-            padding: 20px;
-            gap: 20px;
-        }
-        #reference-container {
-            flex: 1;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-        #reference-phrase {
-            font-size: 24px;
-            text-align: center;
-        }
-        #reference-drawing {
-            max-width: 100%;
-            max-height: 80vh;
-            border: 2px solid #333;
-            border-radius: 10px;
-        }
-        #drawing-area {
-            flex: 1;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-        #canvas {
-            border: 2px solid #333;
-            border-radius: 10px;
-            background-color: #ffffff;
-        }
-        #sidebar {
-            width: 100px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 10px;
-            background-color: #ddd;
-            border-radius: 10px;
-        }
-        .color-button {
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #eraser-button {
-            width: 50px;
-            height: 50px;
+            margin: 20px auto;
+            max-width: 800px;
             background-color: white;
-            border: 2px solid #333;
-            border-radius: 5px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        #timer {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            font-weight: bold;
+        #game-content {
+            margin-top: 20px;
+            min-height: 200px; /* S'assurer que le contenu est visible */
         }
-        #submit-button {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
+        button {
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #2196F3;
             color: white;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
+            margin-top: 10px;
         }
-        #submit-button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
+        button:hover {
+            background-color: #1976D2;
         }
-        #write-area {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border: 2px solid #333;
-            border-radius: 10px;
-            display: none;
-            text-align: center;
-        }
-        #phrase-input {
-            width: 80%;
+        input[type="text"] {
             padding: 10px;
-            margin-bottom: 10px;
+            margin: 10px 0;
+            width: 300px;
             font-size: 16px;
-        }
-        #result-container {
-            display: none;
-            flex: 1;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .sequence {
-            border: 2px solid #333;
-            padding: 10px;
-            border-radius: 10px;
-            background-color: white;
-            width: 80%;
-            text-align: center;
-        }
-        .sequence img {
-            max-width: 300px;
-            max-height: 300px;
-            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
     <div id="game-container">
-        <!-- Zone pour afficher la phrase ou le dessin à deviner/dessiner -->
-        <div id="reference-container">
-            <div id="reference-phrase"></div>
-            <img id="reference-drawing" src="" alt="Dessin à deviner">
+        <h1>Jeu - MultiDraw</h1>
+        <p>Utilisateur connecté : <span id="username-display"></span></p>
+        <div id="game-content">
+            <p>Chargement du jeu...</p>
         </div>
-
-        <!-- Zone de dessin -->
-        <div id="drawing-area">
-            <canvas id="canvas" width="400" height="400"></canvas>
-            <div id="sidebar">
-                <button class="color-button" style="background-color: #ff0000;" data-color="#ff0000"></button>
-                <button class="color-button" style="background-color: #00ff00;" data-color="#00ff00"></button>
-                <button class="color-button" style="background-color: #0000ff;" data-color="#0000ff"></button>
-                <button class="color-button" style="background-color: #ffff00;" data-color="#ffff00"></button>
-                <button class="color-button" style="background-color: #ff00ff;" data-color="#ff00ff"></button>
-                <button class="color-button" style="background-color: #00ffff;" data-color="#00ffff"></button>
-                <button class="color-button" style="background-color: #ffa500;" data-color="#ffa500"></button>
-                <button class="color-button" style="background-color: #800080;" data-color="#800080"></button>
-                <button class="color-button" style="background-color: #000000;" data-color="#000000"></button>
-                <button id="eraser-button">Effacer</button>
-            </div>
-            <div id="timer"></div>
-            <button id="submit-button">J'ai fini</button>
-        </div>
-
-        <!-- Zone pour écrire une phrase ou une devinette -->
-        <div id="write-area">
-            <h2 id="write-title">Écrivez une phrase</h2>
-            <input type="text" id="phrase-input" placeholder="Entrez votre phrase ou devinette">
-            <button id="submit-phrase-button">Valider</button>
-        </div>
-
-        <!-- Résultats -->
-        <div id="result-container"></div>
     </div>
     <script src="/static/game.js"></script>
 </body>

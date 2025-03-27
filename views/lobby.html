@@ -4,72 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lobby - MultiDraw</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
-            background-color: #f0f0f0;
+            background: url('/static/webcontent/background.jpg') no-repeat center center/cover;
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(8px) brightness(0.6);
+            z-index: -1;
+        }
+
         #lobby-container {
-            margin: 20px auto;
-            max-width: 600px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #game-link {
-            word-break: break-all;
-            margin: 10px 0;
-        }
-        #copy-link-button {
-            padding: 5px 10px;
-            background-color: #4CAF50;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             color: white;
-            border: none;
-            cursor: pointer;
+            width: 90%;
+            max-width: 500px;
+            animation: fadeIn 0.8s ease-out;
         }
-        #creator-name {
-            font-weight: bold;
-            margin: 10px 0;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        #players-list {
-            list-style-type: none;
+
+        h1 {
+            color: #ff6b6b;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        p, ul {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style: none;
             padding: 0;
         }
-        #players-list li {
+
+        li {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 10px;
             margin: 5px 0;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: 0.3s;
         }
+
+        li:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: 0.3s;
+            outline: none;
+            margin: 10px 5px;
+            color: white;
+        }
+
+        #copy-link-button {
+            background: #6c5ce7;
+            box-shadow: 0 4px 10px rgba(108, 92, 231, 0.5);
+        }
+
+        #copy-link-button:hover {
+            background: #5748c6;
+            box-shadow: 0 6px 15px rgba(108, 92, 231, 0.7);
+        }
+
         #leave-lobby-button {
-            padding: 10px 20px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;
+            background: #ff4757;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.5);
         }
+
+        #leave-lobby-button:hover {
+            background: #e84141;
+            box-shadow: 0 6px 15px rgba(255, 71, 87, 0.7);
+        }
+
         #start-game-button {
-            padding: 10px 20px;
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;
-            display: none; /* Caché par défaut, affiché uniquement pour le créateur */
+            background: #1e90ff;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.5);
+            display: none; /* Sera affiché uniquement pour le créateur */
+        }
+
+        #start-game-button:hover {
+            background: #0c7cd5;
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.7);
         }
     </style>
 </head>
 <body>
+    <img src="/static/webcontent/background.jpg" alt="BackGround" class="background">
     <div id="lobby-container">
-        <h1>Lobby - MultiDraw</h1>
+        <h1>🎨 Lobby - MultiDraw</h1>
         <p>Utilisateur connecté : <span id="username-display"></span></p>
-        <p>Lien de la partie : <span id="game-link"></span></p>
-        <button id="copy-link-button">Copier le lien</button>
-        <p>Créateur : <span id="creator-name"></span></p>
+        <p>Lien de la partie : <span id="game-link">https://multidraw.com/game/123456</span></p>
+        <button id="copy-link-button">📋 Copier le lien</button>
+        <p>Créateur : <span id="creator-name">???</span></p>
         <h2>Joueurs dans la partie :</h2>
-        <ul id="players-list"></ul>
-        <button id="start-game-button">Commencer le jeu</button>
-        <button id="leave-lobby-button">Quitter le salon</button>
+        <ul id="players-list">
+            <li>Joueur 1</li>
+            <li>Joueur 2</li>
+            <li>Joueur 3</li>
+        </ul>
+        <button id="start-game-button">🚀 Commencer le jeu</button>
+        <button id="leave-lobby-button">❌ Quitter le salon</button>
     </div>
     <script src="/static/lobby.js"></script>
 </body>

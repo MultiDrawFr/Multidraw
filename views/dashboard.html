@@ -8,25 +8,175 @@
     <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre" />
     <title>MultiDraw - Dashboard</title>
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="/static/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="/static/dashboard.js" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('/static/webcontent/background.jpg') no-repeat center center/cover;
+            background-size: cover;
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(8px) brightness(0.4);
+            z-index: -1;
+        }
+
+        nav.main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        nav .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        nav ul {
+            display: flex;
+            list-style-type: none;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            width: 80%;
+            max-width: 1200px;
+            padding: 40px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-title {
+            color: white;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .dashboard-content {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border-radius: 15px;
+            padding: 25px;
+            width: 30%;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-button {
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: transparent;
+            color: #e9e4dc;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            text-align: center;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+
+        .dashboard-button:hover {
+            color: rgb(72, 245, 101);
+        }
+
+        footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        footer p {
+            font-weight: 400;
+        }
+    </style>
   </head>
-  <body style="overflow: hidden;">
+  <body>
     <img src="/static/webcontent/background.jpg" alt="BackGround" class="background">
     <!-- Navigation -->
     <nav class="main-nav">
       <div class="logo">
         <a href="/">
-          <img src="/static/logo.png" alt="Logo MultiDraw" class="logo-img" style="height: 30%; width: 30%;" />
+          <img src="/static/logo.png" alt="Logo MultiDraw" class="logo-img" />
         </a>
       </div>
       <ul>
         <li><a href="/">Accueil</a></li>
         <li><a href="/profile">Mon Profil</a></li>
         <li><a href="/games">Mes Jeux</a></li>
-        <li><a id='logout-button' href="#">Déconnexion</a></li>
+        <li><a id="logout-button" href="#">Déconnexion</a></li>
       </ul>
     </nav>
 
