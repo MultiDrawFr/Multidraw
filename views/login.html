@@ -1,70 +1,203 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Welcome to MultiDraw!">
-    <meta name="keywords" content="multidraw">
-    <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Welcome to MultiDraw!" />
+    <meta name="keywords" content="multidraw" />
+    <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre" />
     <title>MultiDraw - Connexion</title>
-    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/static/style.css" />
     <script src="/static/script.js" defer></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <img src="/static/webcontent/background.jpg" alt="BackGround" class="background">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: white;
+        color: #333;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: blur(10px) brightness(0.3);
+        z-index: -1; /* Place it behind everything else */
+      }
+
+      .loginpage {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        z-index: 1;
+        width: 100%;
+        max-width: 450px;
+      }
+
+      .loginpage h2 {
+        font-size: 2.5rem;
+        font-family: "Anton", sans-serif;
+        color: #181a19; /* Vert clair */
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+      }
+
+      .form-group label {
+        font-size: 1rem;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 5px;
+        display: block;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        color: #333;
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 1px solid #5ccf9f; /* Vert clair */
+        border-radius: 10px;
+        transition: 0.3s ease;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #e599e6; /* Rose clair */
+        background-color: rgba(255, 255, 255, 1);
+      }
+
+      .login-button {
+        width: 100%;
+        padding: 15px;
+        font-size: 1.1rem;
+        color: #fff;
+        background-color: #5ccf9f; /* Vert clair */
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s ease;
+        margin-top: 20px;
+      }
+
+      .login-button:hover {
+        background-color: #47b87f; /* Vert un peu plus foncé */
+      }
+
+      .signup-link {
+        margin-top: 20px;
+        color: #333;
+      }
+
+      .signup-link a {
+        color: #e599e6; /* Rose clair */
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .signup-link a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+
+  <body>
+    <img src="/static/webcontent/background.jpg" alt="BackGround" class="background" />
+
     <section class="loginpage">
-        <h2>Se connecter</h2>
-        <form id="login-form" class="login-form">
-            <div class="form-group">
-                <label for="username">Nom d'utilisateur</label>
-                <input type="text" id="username" name="username" required placeholder="Entrez votre nom d'utilisateur">
-            </div>
-            <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password" required placeholder="Entrez votre mot de passe">
-            </div>
-            <button type="submit" class="login-button">Connexion</button>
-        </form>
-        <p class="signup-link">
-            Pas encore de compte ? <a href="/register">Créer un compte</a>
-        </p>
+      <h2>Se connecter</h2>
+      <form id="login-form" class="login-form">
+        <div class="form-group">
+          <label for="username">Nom d'utilisateur</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            placeholder="Entrez votre nom d'utilisateur"
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="Entrez votre mot de passe"
+          />
+        </div>
+        <button type="submit" class="login-button">Connexion</button>
+      </form>
+      <p class="signup-link">
+        Pas encore de compte ? <a href="/register">Créer un compte</a>
+      </p>
     </section>
 
     <script>
-        document.getElementById("login-form").addEventListener("submit", async function (event) {
-            event.preventDefault(); // Empêche le rechargement de la page
-            
-            const form = event.target;
-            const payload = {
-                username: form.username.value,
-                password: form.password.value,
-            };
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Empêche le rechargement de la page
 
-            try {
-                const response = await fetch("/api/v1/accounts/login", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload),
-                });
+          const form = event.target;
+          const payload = {
+            username: form.username.value,
+            password: form.password.value,
+          };
 
-                if (response.ok) {
-                    const result = await response.json();
-                    alert(result.message);
-                    window.location.href = "/dashboard";
-                } else {
-                    const error = await response.json();
-                    alert(`Erreur : ${error.detail}`);
-                }
-            } catch (err) {
-                console.error("Erreur réseau :", err);
-                alert("Une erreur réseau s'est produite.");
+          try {
+            const response = await fetch("/api/v1/accounts/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              window.location.href = "/dashboard";
+            } else {
+              const error = await response.json();
+              alert(`Erreur : ${error.detail}`);
             }
+          } catch (err) {
+            console.error("Erreur réseau :", err);
+            alert("Une erreur réseau s'est produite.");
+          }
         });
     </script>
-</body>
+  </body>
 </html>

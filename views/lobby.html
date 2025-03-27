@@ -1,148 +1,152 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lobby - MultiDraw</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Lobby de MultiDraw" />
+    <meta name="keywords" content="multidraw, game, lobby" />
+    <meta name="author" content="Roussel Kevin, Noé Bizouard, l'autre" />
+    <title>MultiDraw - Lobby</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/static/style.css" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-            background: url('/static/webcontent/background.jpg') no-repeat center center/cover;
-            position: relative;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
+      body {
+        font-family: "Poppins", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: url('/static/webcontent/background.jpg') no-repeat center center/cover;
+        position: relative;
+        overflow: hidden;
+      }
 
-        .background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: blur(8px) brightness(0.6);
-            z-index: -1;
-        }
+      .background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: blur(8px) brightness(0.6);
+        z-index: -1;
+      }
 
-        #lobby-container {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(12px);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            color: white;
-            width: 90%;
-            max-width: 500px;
-            animation: fadeIn 0.8s ease-out;
-        }
+      .lobby-container {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(12px);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        color: white;
+        width: 90%;
+        max-width: 500px;
+        animation: fadeIn 0.8s ease-out;
+        text-align: center;
+      }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
 
-        h1 {
-            color: #ff6b6b;
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
+      h1 {
+        color: #181a19;
+        font-size: 28px;
+        margin-bottom: 15px;
+      }
 
-        p, ul {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
+      p, ul {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
 
-        ul {
-            list-style: none;
-            padding: 0;
-        }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
 
-        li {
-            background: rgba(255, 255, 255, 0.3);
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: 0.3s;
-        }
+      li {
+        background: rgba(255, 255, 255, 0.3);
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: 0.3s;
+      }
 
-        li:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
+      li:hover {
+        background: rgba(255, 255, 255, 0.5);
+      }
 
-        button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: 0.3s;
-            outline: none;
-            margin: 10px 5px;
-            color: white;
-        }
+      button {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: 0.3s;
+        outline: none;
+        margin: 10px 5px;
+        color: white;
+      }
 
-        #copy-link-button {
-            background: #6c5ce7;
-            box-shadow: 0 4px 10px rgba(108, 92, 231, 0.5);
-        }
+      #copy-link-button {
+        background: #6c5ce7;
+        box-shadow: 0 4px 10px rgba(108, 92, 231, 0.5);
+      }
 
-        #copy-link-button:hover {
-            background: #5748c6;
-            box-shadow: 0 6px 15px rgba(108, 92, 231, 0.7);
-        }
+      #copy-link-button:hover {
+        background: #5748c6;
+        box-shadow: 0 6px 15px rgba(108, 92, 231, 0.7);
+      }
 
-        #leave-lobby-button {
-            background: #ff4757;
-            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.5);
-        }
+      #leave-lobby-button {
+        background: #ff4757;
+        box-shadow: 0 4px 10px rgba(255, 71, 87, 0.5);
+      }
 
-        #leave-lobby-button:hover {
-            background: #e84141;
-            box-shadow: 0 6px 15px rgba(255, 71, 87, 0.7);
-        }
+      #leave-lobby-button:hover {
+        background: #e84141;
+        box-shadow: 0 6px 15px rgba(255, 71, 87, 0.7);
+      }
 
-        #start-game-button {
-            background: #1e90ff;
-            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.5);
-            display: none; /* Sera affiché uniquement pour le créateur */
-        }
+      #start-game-button {
+        background: #1e90ff;
+        box-shadow: 0 4px 10px rgba(30, 144, 255, 0.5);
+        display: none; /* Sera affiché uniquement pour le créateur */
+      }
 
-        #start-game-button:hover {
-            background: #0c7cd5;
-            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.7);
-        }
+      #start-game-button:hover {
+        background: #0c7cd5;
+        box-shadow: 0 6px 15px rgba(30, 144, 255, 0.7);
+      }
     </style>
-</head>
-<body>
-    <img src="/static/webcontent/background.jpg" alt="BackGround" class="background">
-    <div id="lobby-container">
-        <h1>🎨 Lobby - MultiDraw</h1>
-        <p>Utilisateur connecté : <span id="username-display"></span></p>
-        <p>Lien de la partie : <span id="game-link">https://multidraw.com/game/123456</span></p>
-        <button id="copy-link-button">📋 Copier le lien</button>
-        <p>Créateur : <span id="creator-name">???</span></p>
-        <h2>Joueurs dans la partie :</h2>
-        <ul id="players-list">
-            <li>Joueur 1</li>
-            <li>Joueur 2</li>
-            <li>Joueur 3</li>
-        </ul>
-        <button id="start-game-button">🚀 Commencer le jeu</button>
-        <button id="leave-lobby-button">❌ Quitter le salon</button>
+  </head>
+  <body>
+    <img src="/static/webcontent/background.jpg" alt="BackGround" class="background" />
+    <div class="lobby-container">
+      <h1>🎨 Lobby - MultiDraw</h1>
+      <p>Utilisateur connecté : <span id="username-display"></span></p>
+      <p>Lien de la partie : <span id="game-link">https://multidraw.com/game/123456</span></p>
+      <button id="copy-link-button">📋 Copier le lien</button>
+      <p>Créateur : <span id="creator-name">???</span></p>
+      <h2>Joueurs dans la partie :</h2>
+      <ul id="players-list">
+        <li>Joueur 1</li>
+        <li>Joueur 2</li>
+        <li>Joueur 3</li>
+      </ul>
+      <button id="start-game-button">🚀 Commencer le jeu</button>
+      <button id="leave-lobby-button">❌ Quitter le salon</button>
     </div>
     <script src="/static/lobby.js"></script>
-</body>
+  </body>
 </html>

@@ -19,7 +19,7 @@ window.addEventListener("load", async function() {
         document.getElementById("username-display").textContent = username;
 
         // Afficher le lien de la partie
-        const gameLinkUrl = `https://bookish-zebra-694qr94j467ph4w6w-8000.app.github.dev/join/${gameLink}`;
+        const gameLinkUrl = `/join/${gameLink}`;
         document.getElementById("game-link").textContent = gameLinkUrl;
 
         // Gestion du bouton "Copier le lien"

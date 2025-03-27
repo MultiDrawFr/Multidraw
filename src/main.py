@@ -396,6 +396,8 @@ async def websocket_endpoint(websocket: WebSocket, game_link: str, username: str
                 "total_rounds": 6,  # Nombre total de tours (3 cycles de draw/guess)
                 "player_data": {},  # Stocke les dessins et devinettes de chaque joueur
                 "players_order": [],  # Ordre des joueurs pour la distribution des données
+                "currentStoryIndex": 0,  # Index de l'histoire actuelle (pour la phase result)
+                "currentContributionIndex": 0  # Index de la contribution actuelle (pour la phase result)
             }
 
         # Envoyer l'état initial de la phase au client
@@ -434,37 +436,44 @@ async def websocket_endpoint(websocket: WebSocket, game_link: str, username: str
                     print(f"Le jeu ne peut pas démarrer : {len(players)} joueurs, minimum 2 requis")
                     continue
 
+                # Vérifier que tous les joueurs sont connectés via WebSocket
+                if game_link not in manager.active_connections or len(manager.active_connections[game_link]) != len(players):
+                    await websocket.send_text(json.dumps({"error": "Tous les joueurs ne sont pas connectés. Veuillez réessayer."}))
+                    print(f"Le jeu ne peut pas démarrer : {len(manager.active_connections.get(game_link, []))} clients connectés, {len(players)} joueurs attendus")
+                    continue
+
                 # Initialiser l'ordre des joueurs
                 manager.game_state[game_link]["players_order"] = players
                 for player in players:
                     manager.game_state[game_link]["player_data"][player] = []
 
-                # Passer à une phase "hidden" pour initialiser le jeu (0.1 seconde)
+                # Passer à une phase "countdown" pour 3 secondes
                 manager.game_state[game_link]["current_round"] = 0
-                manager.game_state[game_link]["phase"] = "hidden"
-                manager.game_state[game_link]["timer"] = 0.1  # 0.1 seconde
+                manager.game_state[game_link]["phase"] = "countdown"
+                manager.game_state[game_link]["timer"] = 3  # 3 secondes
 
-                # Diffuser un message pour démarrer le jeu
-                print(f"Diffusion de start_game pour la partie {game_link}, phase=hidden, joueurs connectés: {len(manager.active_connections.get(game_link, []))}")
+                # Diffuser un message pour démarrer le compte à rebours
+                print(f"Diffusion de start_game pour la partie {game_link}, phase=countdown, joueurs connectés: {len(manager.active_connections.get(game_link, []))}")
                 await manager.broadcast(game_link, {
                     "action": "start_game",
-                    "phase": "hidden",
+                    "phase": "countdown",
                     "current_round": 0,
                     "timer": manager.game_state[game_link]["timer"]
                 })
 
-                # Envoyer un message start_round à chaque joueur pour la phase hidden
+                # Envoyer un message start_round à chaque joueur pour la phase countdown
                 for player in players:
                     try:
                         await manager.broadcast(game_link, {
                             "action": "start_round",
-                            "phase": "hidden",
+                            "phase": "countdown",
                             "current_round": 0,
-                            "timer": 0.1,
+                            "timer": 3,
                             "data": "",
+                            "data_type": "text",
                             "username": player
                         })
-                        print(f"Message start_round envoyé à {player} pour la phase hidden")
+                        print(f"Message start_round envoyé à {player} pour la phase countdown")
                     except Exception as e:
                         print(f"Erreur lors de l'envoi de start_round à {player}: {e}")
 
@@ -476,6 +485,12 @@ async def websocket_endpoint(websocket: WebSocket, game_link: str, username: str
 
                 # Enregistrer le dessin du joueur
                 drawing_data = message.get("drawing_data")
+                # Vérifier si le dessin est vide (taille minimale pour un dessin non vide)
+                if not drawing_data or len(drawing_data) < 100:  # Une image vide fait environ 80 caractères
+                    print(f"Erreur: Dessin vide ou corrompu soumis par {username}")
+                    await websocket.send_text(json.dumps({"error": "Le dessin est vide ou corrompu. Veuillez dessiner quelque chose avant de soumettre."}))
+                    continue
+
                 round_data = {
                     "type": "drawing",
                     "value": drawing_data,
@@ -483,17 +498,18 @@ async def websocket_endpoint(websocket: WebSocket, game_link: str, username: str
                     "round": manager.game_state[game_link]["current_round"]
                 }
                 manager.game_state[game_link]["player_data"][username].append(round_data)
-                print(f"Dessin soumis par {username}")
+                print(f"Dessin soumis par {username}: {drawing_data[:50]}...")
 
                 # Vérifier si tous les joueurs ont soumis leur dessin
                 game = db.query(Game).filter_by(link=game_link).first()
                 players = [p for p in (game.players.split(",") if game.players else []) if p]
                 all_submitted = all(
-                    len(manager.game_state[game_link]["player_data"][player]) >= manager.game_state[game_link]["current_round"]
+                    len(manager.game_state[game_link]["player_data"][player]) > manager.game_state[game_link]["current_round"] - 1
                     for player in players
                 )
 
                 if all_submitted:
+                    print(f"Tous les joueurs ont soumis leur dessin pour le tour {manager.game_state[game_link]['current_round']}")
                     await start_next_round(game_link, db)
 
             elif message.get("action") == "submit_phrase":
@@ -517,11 +533,12 @@ async def websocket_endpoint(websocket: WebSocket, game_link: str, username: str
                 game = db.query(Game).filter_by(link=game_link).first()
                 players = [p for p in (game.players.split(",") if game.players else []) if p]
                 all_submitted = all(
-                    len(manager.game_state[game_link]["player_data"][player]) >= manager.game_state[game_link]["current_round"]
+                    len(manager.game_state[game_link]["player_data"][player]) > manager.game_state[game_link]["current_round"] - 1
                     for player in players
                 )
 
                 if all_submitted:
+                    print(f"Tous les joueurs ont soumis leur devinette pour le tour {manager.game_state[game_link]['current_round']}")
                     await start_next_round(game_link, db)
 
             elif message.get("action") == "next_result":
@@ -531,9 +548,20 @@ async def websocket_endpoint(websocket: WebSocket, game_link: str, username: str
                     await websocket.send_text(json.dumps({"error": "Seul le créateur peut passer au résultat suivant"}))
                     continue
 
+                # Mettre à jour les indices dans game_state
+                state = manager.game_state[game_link]
+                state["currentContributionIndex"] += 1
+                if state["currentContributionIndex"] >= len(state["player_data"][state["players_order"][state["currentStoryIndex"]]]):
+                    state["currentStoryIndex"] += 1
+                    state["currentContributionIndex"] = 0
+                    if state["currentStoryIndex"] >= len(state["players_order"]):
+                        state["currentStoryIndex"] = 0  # Revenir au début si on atteint la fin
+
                 # Diffuser un message pour passer au résultat suivant
                 await manager.broadcast(game_link, {
-                    "action": "next_result"
+                    "action": "update_result",
+                    "currentStoryIndex": state["currentStoryIndex"],
+                    "currentContributionIndex": state["currentContributionIndex"]
                 })
 
             elif message.get("action") == "prev_result":
@@ -543,9 +571,20 @@ async def websocket_endpoint(websocket: WebSocket, game_link: str, username: str
                     await websocket.send_text(json.dumps({"error": "Seul le créateur peut revenir au résultat précédent"}))
                     continue
 
+                # Mettre à jour les indices dans game_state
+                state = manager.game_state[game_link]
+                state["currentContributionIndex"] -= 1
+                if state["currentContributionIndex"] < 0:
+                    state["currentStoryIndex"] -= 1
+                    if state["currentStoryIndex"] < 0:
+                        state["currentStoryIndex"] = len(state["players_order"]) - 1  # Aller à la dernière histoire
+                    state["currentContributionIndex"] = len(state["player_data"][state["players_order"][state["currentStoryIndex"]]]) - 1
+
                 # Diffuser un message pour revenir au résultat précédent
                 await manager.broadcast(game_link, {
-                    "action": "prev_result"
+                    "action": "update_result",
+                    "currentStoryIndex": state["currentStoryIndex"],
+                    "currentContributionIndex": state["currentContributionIndex"]
                 })
 
     except WebSocketDisconnect:
@@ -562,7 +601,9 @@ async def start_next_round(game_link: str, db: Session):
         await manager.broadcast(game_link, {
             "action": "show_result",
             "player_data": state["player_data"],
-            "players_order": state["players_order"]
+            "players_order": state["players_order"],
+            "currentStoryIndex": state["currentStoryIndex"],
+            "currentContributionIndex": state["currentContributionIndex"]
         })
         print(f"Fin du jeu pour {game_link}, passage à la phase result")
     else:
@@ -582,7 +623,19 @@ async def start_next_round(game_link: str, db: Session):
         for i, player in enumerate(players_order):
             # Le joueur reçoit les données du joueur précédent
             prev_player = players_order[(i - 1) % len(players_order)]
-            prev_data = state["player_data"][prev_player][-1]["value"] if state["player_data"][prev_player] else "Dessinez ce que vous voulez !"
+            prev_data = None
+            prev_data_type = "text"
+            if state["player_data"][prev_player] and len(state["player_data"][prev_player]) > 0:
+                prev_data = state["player_data"][prev_player][-1]["value"]
+                prev_data_type = state["player_data"][prev_player][-1]["type"]
+            else:
+                prev_data = "Dessinez ce que vous voulez !"
+
+            # Vérifier que prev_data n'est pas une image vide si c'est une image
+            if prev_data_type == "drawing" and (not prev_data or len(prev_data) < 100):
+                print(f"Erreur: Données vides ou corrompues pour {prev_player} dans le tour {state['current_round']}")
+                prev_data = "Dessinez ce que vous voulez !"
+                prev_data_type = "text"
 
             # Envoyer les données au joueur
             try:
@@ -592,20 +645,21 @@ async def start_next_round(game_link: str, db: Session):
                     "current_round": state["current_round"],
                     "timer": state["timer"],
                     "data": prev_data,
+                    "data_type": prev_data_type,
                     "username": player
                 })
-                print(f"Message start_round envoyé à {player}: phase={state['phase']}")
+                print(f"Message start_round envoyé à {player}: phase={state['phase']}, data_type={prev_data_type}, data={prev_data[:50]}...")
             except Exception as e:
                 print(f"Erreur lors de l'envoi de start_round à {player}: {e}")
 
 # Tâche périodique pour gérer les timers du jeu
 async def game_timer():
     while True:
-        await asyncio.sleep(0.1)  # Vérifier toutes les 0.1 secondes pour gérer la phase hidden
+        await asyncio.sleep(1)  # Vérifier toutes les secondes
         for game_link, state in manager.game_state.items():
-            # Ne gérer le timer que si la phase est "hidden", "draw" ou "guess"
-            if state["phase"] in ["hidden", "draw", "guess"] and state["timer"] > 0:
-                state["timer"] -= 0.1
+            # Ne gérer le timer que si la phase est "countdown", "draw" ou "guess"
+            if state["phase"] in ["countdown", "draw", "guess"] and state["timer"] > 0:
+                state["timer"] -= 1
                 await manager.broadcast(game_link, {
                     "action": "update_timer",
                     "timer": state["timer"]
@@ -619,7 +673,9 @@ async def game_timer():
                         await manager.broadcast(game_link, {
                             "action": "show_result",
                             "player_data": state["player_data"],
-                            "players_order": state["players_order"]
+                            "players_order": state["players_order"],
+                            "currentStoryIndex": state["currentStoryIndex"],
+                            "currentContributionIndex": state["currentContributionIndex"]
                         })
                     else:
                         # Déterminer la phase du tour suivant
@@ -638,7 +694,19 @@ async def game_timer():
                         for i, player in enumerate(players_order):
                             # Le joueur reçoit les données du joueur précédent
                             prev_player = players_order[(i - 1) % len(players_order)]
-                            prev_data = state["player_data"][prev_player][-1]["value"] if state["player_data"][prev_player] else "Dessinez ce que vous voulez !"
+                            prev_data = None
+                            prev_data_type = "text"
+                            if state["player_data"][prev_player] and len(state["player_data"][prev_player]) > 0:
+                                prev_data = state["player_data"][prev_player][-1]["value"]
+                                prev_data_type = state["player_data"][prev_player][-1]["type"]
+                            else:
+                                prev_data = "Dessinez ce que vous voulez !"
+
+                            # Vérifier que prev_data n'est pas une image vide si c'est une image
+                            if prev_data_type == "drawing" and (not prev_data or len(prev_data) < 100):
+                                print(f"Erreur: Données vides ou corrompues pour {prev_player} dans le tour {state['current_round']}")
+                                prev_data = "Dessinez ce que vous voulez !"
+                                prev_data_type = "text"
 
                             # Envoyer les données au joueur
                             try:
@@ -648,9 +716,10 @@ async def game_timer():
                                     "current_round": state["current_round"],
                                     "timer": state["timer"],
                                     "data": prev_data,
+                                    "data_type": prev_data_type,
                                     "username": player
                                 })
-                                print(f"Message start_round envoyé à {player}: phase={state['phase']}")
+                                print(f"Message start_round envoyé à {player}: phase={state['phase']}, data_type={prev_data_type}, data={prev_data[:50]}...")
                             except Exception as e:
                                 print(f"Erreur lors de l'envoi de start_round à {player}: {e}")
 

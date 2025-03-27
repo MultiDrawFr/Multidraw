@@ -5,10 +5,12 @@ const username = urlParams.get('username');
 
 let ws; // Variable pour stocker la connexion WebSocket
 let creator; // Variable pour stocker le nom du créateur
-let currentStoryIndex = 0; // Index de l'histoire actuelle
-let currentContributionIndex = 0; // Index de la contribution actuelle dans l'histoire
+let players = []; // Liste des joueurs
 let playerData; // Données des joueurs
 let playersOrder; // Ordre des joueurs
+let currentStoryIndex = 0; // Index de l'histoire actuelle
+let currentContributionIndex = 0; // Index de la contribution actuelle dans l'histoire
+let assignedSection = null; // Section attribuée au joueur actuel
 
 window.addEventListener("load", async function() {
     try {
@@ -38,8 +40,9 @@ window.addEventListener("load", async function() {
             console.log("Comparaison username:", { received: data.username, local: username });
 
             if (data.creator && data.players) {
-                // Stocker le créateur pour savoir si l'utilisateur actuel est le créateur
+                // Stocker le créateur et la liste des joueurs
                 creator = data.creator;
+                players = data.players;
             }
 
             if (data.action === "update_phase") {
@@ -49,13 +52,13 @@ window.addEventListener("load", async function() {
             } else if (data.action === "start_game") {
                 // Gérer le début du jeu pour tous les joueurs
                 console.log("Début du jeu pour", username, "- Phase:", data.phase);
-                startRound(data.phase, data.current_round, data.timer, data.data || "");
+                startRound(data.phase, data.current_round, data.timer, data.data || "", data.data_type || "text");
             } else if (data.action === "start_round") {
-                // Gérer le début d'un tour (hidden, draw, guess)
+                // Gérer le début d'un tour (countdown, draw, guess)
                 console.log("Message start_round reçu:", { phase: data.phase, username: data.username });
                 if (data.username === username) {
                     console.log("Début du tour pour", username, "- Phase:", data.phase);
-                    startRound(data.phase, data.current_round, data.timer, data.data);
+                    startRound(data.phase, data.current_round, data.timer, data.data, data.data_type);
                 } else {
                     console.log("Message start_round ignoré - username ne correspond pas:", { received: data.username, local: username });
                 }
@@ -66,34 +69,19 @@ window.addEventListener("load", async function() {
                 // Stocker les données et afficher les résultats
                 playerData = data.player_data;
                 playersOrder = data.players_order;
-                currentStoryIndex = 0;
-                currentContributionIndex = 0;
+                currentStoryIndex = data.currentStoryIndex;
+                currentContributionIndex = data.currentContributionIndex;
                 showResults();
-            } else if (data.action === "next_result") {
-                // Passer à la contribution suivante
-                currentContributionIndex++;
-                if (currentContributionIndex >= playerData[playersOrder[currentStoryIndex]].length) {
-                    currentStoryIndex++;
-                    currentContributionIndex = 0;
-                    if (currentStoryIndex >= playersOrder.length) {
-                        currentStoryIndex = 0; // Revenir au début si on atteint la fin
-                    }
-                }
-                showResults();
-            } else if (data.action === "prev_result") {
-                // Revenir à la contribution précédente
-                currentContributionIndex--;
-                if (currentContributionIndex < 0) {
-                    currentStoryIndex--;
-                    if (currentStoryIndex < 0) {
-                        currentStoryIndex = playersOrder.length - 1; // Aller à la dernière histoire
-                    }
-                    currentContributionIndex = playerData[playersOrder[currentStoryIndex]].length - 1;
-                }
+            } else if (data.action === "update_result") {
+                // Mettre à jour les indices pour tous les joueurs
+                currentStoryIndex = data.currentStoryIndex;
+                currentContributionIndex = data.currentContributionIndex;
                 showResults();
             } else if (data.message === "La partie est vide, elle sera supprimée dans 5 minutes si personne ne rejoint") {
                 alert("La partie est vide, elle sera supprimée dans 5 minutes si personne ne rejoint.");
                 window.location.href = "/dashboard";
+            } else if (data.error) {
+                alert(data.error);
             }
         };
 
@@ -137,17 +125,20 @@ function updateGamePhase(phase, currentRound) {
         const waitingMessage = document.createElement("p");
         waitingMessage.textContent = "En attente du démarrage du jeu...";
         gameContent.appendChild(waitingMessage);
-    } else if (phase === "hidden") {
-        // Phase cachée, ne rien afficher
-        const hiddenMessage = document.createElement("p");
-        hiddenMessage.textContent = "Initialisation...";
-        hiddenMessage.style.display = "none"; // Cacher le message
-        gameContent.appendChild(hiddenMessage);
+    } else if (phase === "countdown") {
+        const countdownMessage = document.createElement("p");
+        countdownMessage.textContent = "Le jeu commence dans :";
+        gameContent.appendChild(countdownMessage);
+
+        const timerDisplay = document.createElement("p");
+        timerDisplay.id = "timer-display";
+        timerDisplay.textContent = `Temps restant: 3 secondes`;
+        gameContent.appendChild(timerDisplay);
     }
 }
 
 // Gérer le début d'un tour
-function startRound(phase, currentRound, timer, data) {
+function startRound(phase, currentRound, timer, data, dataType) {
     const gameContent = document.getElementById("game-content");
     if (!gameContent) {
         console.error("Élément 'game-content' non trouvé dans le DOM");
@@ -164,18 +155,24 @@ function startRound(phase, currentRound, timer, data) {
     timerDisplay.textContent = `Temps restant: ${timer} secondes`;
     gameContent.appendChild(timerDisplay);
 
-    if (phase === "hidden") {
-        // Phase cachée, ne rien afficher
-        const hiddenMessage = document.createElement("p");
-        hiddenMessage.textContent = "Initialisation...";
-        hiddenMessage.style.display = "none"; // Cacher le message
-        gameContent.appendChild(hiddenMessage);
+    if (phase === "countdown") {
+        const countdownMessage = document.createElement("p");
+        countdownMessage.textContent = "Le jeu commence dans :";
+        gameContent.appendChild(countdownMessage);
     } else if (phase === "draw") {
         console.log("Affichage de la phase 'draw' pour", username);
         const instruction = document.createElement("p");
-        instruction.textContent = data || "Dessinez ce que vous voulez !";
+        instruction.textContent = dataType === "text" ? data : "Dessinez ce que représente cette image :";
         gameContent.appendChild(instruction);
 
+        if (dataType === "drawing") {
+            const image = document.createElement("img");
+            image.src = data;
+            image.style.maxWidth = "400px";
+            gameContent.appendChild(image);
+        }
+
+        // Créer le canvas
         const canvas = document.createElement("canvas");
         canvas.id = "drawing-canvas";
         canvas.width = 400;
@@ -185,17 +182,126 @@ function startRound(phase, currentRound, timer, data) {
 
         const ctx = canvas.getContext("2d");
         let isDrawing = false;
+        let isErasing = false;
+        let currentColor = "black";
+        let brushSize = 5;
 
+        // Diviser le canvas en sections selon le nombre de joueurs
+        const numPlayers = players.length;
+        const sections = divideCanvas(numPlayers, canvas.width, canvas.height);
+        console.log("Sections attribuées:", sections);
+
+        // Attribuer une section au joueur actuel
+        const playerIndex = players.indexOf(username);
+        assignedSection = sections[playerIndex];
+        console.log(`Section attribuée à ${username}:`, assignedSection);
+
+        // Dessiner les bordures des sections et indiquer les joueurs
+        sections.forEach((section, index) => {
+            // Dessiner les bordures
+            ctx.strokeStyle = "gray";
+            ctx.lineWidth = 1;
+            ctx.strokeRect(section.x, section.y, section.width, section.height);
+
+            // Afficher le nom du joueur dans sa section
+            ctx.fillStyle = "black";
+            ctx.font = "12px Arial";
+            ctx.fillText(players[index], section.x + 5, section.y + 15);
+        });
+
+        // Palette de couleurs
+        const colorPalette = document.createElement("div");
+        colorPalette.style.marginTop = "10px";
+        const colors = [
+            "black", "red", "blue", "green", "yellow", "purple", "orange",
+            "cyan", "magenta", "brown", "pink", "lime", "teal", "indigo", "gray"
+        ];
+        colors.forEach(color => {
+            const colorButton = document.createElement("button");
+            colorButton.style.backgroundColor = color;
+            colorButton.style.width = "30px";
+            colorButton.style.height = "30px";
+            colorButton.style.margin = "5px";
+            colorButton.style.border = "1px solid #ccc";
+            colorButton.style.cursor = "pointer";
+            colorButton.addEventListener("click", () => {
+                currentColor = color;
+                isErasing = false;
+                ctx.strokeStyle = currentColor;
+                ctx.globalCompositeOperation = "source-over";
+            });
+            colorPalette.appendChild(colorButton);
+        });
+        gameContent.appendChild(colorPalette);
+
+        // Bouton effaceur
+        const eraserButton = document.createElement("button");
+        eraserButton.textContent = "Effaceur";
+        eraserButton.style.margin = "5px";
+        eraserButton.addEventListener("click", () => {
+            isErasing = true;
+            ctx.globalCompositeOperation = "destination-out";
+        });
+        gameContent.appendChild(eraserButton);
+
+        // Sélecteur de taille de pinceau/effaceur
+        const sizeSelector = document.createElement("select");
+        sizeSelector.style.margin = "5px";
+        [2, 5, 10, 15, 20].forEach(size => {
+            const option = document.createElement("option");
+            option.value = size;
+            option.textContent = `Taille ${size}`;
+            if (size === brushSize) option.selected = true;
+            sizeSelector.appendChild(option);
+        });
+        sizeSelector.addEventListener("change", (e) => {
+            brushSize = parseInt(e.target.value);
+            ctx.lineWidth = brushSize;
+        });
+        gameContent.appendChild(sizeSelector);
+
+        // Initialiser le contexte du canvas
+        ctx.strokeStyle = currentColor;
+        ctx.lineWidth = brushSize;
+        ctx.lineCap = "round";
+
+        // Gestion du dessin (limité à la section attribuée)
         canvas.addEventListener("mousedown", (e) => {
-            isDrawing = true;
-            ctx.beginPath();
-            ctx.moveTo(e.offsetX, e.offsetY);
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Vérifier si le clic est dans la section attribuée
+            if (
+                x >= assignedSection.x &&
+                x <= assignedSection.x + assignedSection.width &&
+                y >= assignedSection.y &&
+                y <= assignedSection.y + assignedSection.height
+            ) {
+                isDrawing = true;
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            }
         });
 
         canvas.addEventListener("mousemove", (e) => {
             if (isDrawing) {
-                ctx.lineTo(e.offsetX, e.offsetY);
-                ctx.stroke();
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                // Limiter le dessin à la section attribuée
+                if (
+                    x >= assignedSection.x &&
+                    x <= assignedSection.x + assignedSection.width &&
+                    y >= assignedSection.y &&
+                    y <= assignedSection.y + assignedSection.height
+                ) {
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                } else {
+                    isDrawing = false; // Arrêter le dessin si on sort de la section
+                }
             }
         });
 
@@ -203,8 +309,13 @@ function startRound(phase, currentRound, timer, data) {
             isDrawing = false;
         });
 
+        canvas.addEventListener("mouseout", () => {
+            isDrawing = false;
+        });
+
         const submitButton = document.createElement("button");
         submitButton.textContent = "Soumettre le dessin";
+        submitButton.style.marginTop = "10px";
         submitButton.addEventListener("click", () => {
             const drawingData = canvas.toDataURL();
             ws.send(JSON.stringify({
@@ -217,13 +328,19 @@ function startRound(phase, currentRound, timer, data) {
     } else if (phase === "guess") {
         console.log("Affichage de la phase 'guess' pour", username);
         const instruction = document.createElement("p");
-        instruction.textContent = "Devinez ce que représente ce dessin :";
+        instruction.textContent = dataType === "drawing" ? "Devinez ce que représente ce dessin :" : "Devinez à partir de cette description :";
         gameContent.appendChild(instruction);
 
-        const image = document.createElement("img");
-        image.src = data;
-        image.style.maxWidth = "400px";
-        gameContent.appendChild(image);
+        if (dataType === "drawing") {
+            const image = document.createElement("img");
+            image.src = data;
+            image.style.maxWidth = "400px";
+            gameContent.appendChild(image);
+        } else {
+            const text = document.createElement("p");
+            text.textContent = data;
+            gameContent.appendChild(text);
+        }
 
         const guessInput = document.createElement("input");
         guessInput.type = "text";
@@ -254,6 +371,32 @@ function startRound(phase, currentRound, timer, data) {
     } else {
         console.warn("Phase inconnue:", phase);
     }
+}
+
+// Fonction pour diviser le canvas en sections
+function divideCanvas(numPlayers, canvasWidth, canvasHeight) {
+    const sections = [];
+    if (numPlayers <= 0) return sections;
+
+    // Déterminer la disposition des sections (par exemple, en grille)
+    const cols = Math.ceil(Math.sqrt(numPlayers));
+    const rows = Math.ceil(numPlayers / cols);
+
+    const sectionWidth = canvasWidth / cols;
+    const sectionHeight = canvasHeight / rows;
+
+    for (let i = 0; i < numPlayers; i++) {
+        const row = Math.floor(i / cols);
+        const col = i % cols;
+        sections.push({
+            x: col * sectionWidth,
+            y: row * sectionHeight,
+            width: sectionWidth,
+            height: sectionHeight
+        });
+    }
+
+    return sections;
 }
 
 // Mettre à jour le timer
